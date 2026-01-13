@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 
 const useActiveSection = (sectionIds) => {
-  const [activeSection, setActiveSection] = useState('');
+  const [activeSection, setActiveSection] = useState('beranda');
 
   useEffect(() => {
     const observers = [];
 
     sectionIds.forEach((id) => {
-      const section = document.getElementById(id);
-      if (!section) return;
+      const el = document.getElementById(id);
+      if (!el) return;
 
       const observer = new IntersectionObserver(
         ([entry]) => {
@@ -17,15 +17,17 @@ const useActiveSection = (sectionIds) => {
           }
         },
         {
-          rootMargin: '-40% 0px -40% 0px',
+          root: null,
+          rootMargin: '-30% 0px -60% 0px',
+          threshold: 0,
         }
       );
 
-      observer.observe(section);
+      observer.observe(el);
       observers.push(observer);
     });
 
-    return () => observers.forEach((observer) => observer.disconnect());
+    return () => observers.forEach((obs) => obs.disconnect());
   }, [sectionIds]);
 
   return activeSection;

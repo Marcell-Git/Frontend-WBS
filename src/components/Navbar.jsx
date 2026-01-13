@@ -5,7 +5,7 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import LogoWBS from '../assets/LogoWBS.png';
 import useActiveSection from '../hooks/useActiveSection';
 
-const sectionIds = ['tentang', 'prosedur', 'bantuan'];
+const sectionIds = ['beranda', 'tentang', 'prosedur', 'bantuan'];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -14,13 +14,6 @@ const Navbar = () => {
 
   const isHome = location.pathname === '/';
   const isLacakActive = location.pathname === '/lacak-laporan';
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
 
   const linkClass = (active) =>
     `transition-colors ${
@@ -37,23 +30,11 @@ const Navbar = () => {
 
         {/* Desktop */}
         <ul className="hidden md:flex gap-10 font-medium">
-          {/* BERANDA */}
-          <li>
-            <NavLink
-              to="/"
-              onClick={scrollToTop}
-              className="cursor-pointer hover:text-blue-800"
-            >
-              Beranda
-            </NavLink>
-          </li>
-
-          {/* ANCHOR SECTIONS */}
           {sectionIds.map((id) => (
             <li key={id}>
               <HashLink
-                to={`/#${id}`}
                 smooth
+                to={`/#${id}`}
                 className={linkClass(activeSection === id && isHome)}
               >
                 {id.charAt(0).toUpperCase() + id.slice(1)}
@@ -61,11 +42,12 @@ const Navbar = () => {
             </li>
           ))}
 
-          {/* LACAK */}
           <li>
             <NavLink
               to="/lacak-laporan"
-              className={({ isActive }) => linkClass(isActive || isLacakActive)}
+              className={({ isActive }) =>
+                linkClass(isActive || isLacakActive)
+              }
             >
               Lacak Laporan
             </NavLink>
@@ -91,25 +73,11 @@ const Navbar = () => {
       {open && (
         <div className="md:hidden absolute right-6 top-full mt-3 bg-white rounded-2xl shadow-lg w-56 py-2">
           <ul>
-            <li>
-              <NavLink
-                to="/"
-                onClick={() => setOpen(false)}
-                className={({ isActive }) =>
-                  `block px-4 py-2 ${
-                    isActive ? 'text-blue-800 font-semibold' : ''
-                  }`
-                }
-              >
-                Beranda
-              </NavLink>
-            </li>
-
             {sectionIds.map((id) => (
               <li key={id}>
                 <HashLink
-                  to={`/#${id}`}
                   smooth
+                  to={`/#${id}`}
                   onClick={() => setOpen(false)}
                   className={`block px-4 py-2 ${
                     activeSection === id && isHome
