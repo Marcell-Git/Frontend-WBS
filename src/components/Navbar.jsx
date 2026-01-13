@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import { NavLink, useLocation } from 'react-router-dom';
 import { FiMenu, FiX } from 'react-icons/fi';
@@ -9,27 +9,53 @@ const sectionIds = ['beranda', 'tentang', 'prosedur', 'bantuan'];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false); // Opsional: Deteksi scroll
   const location = useLocation();
   const activeSection = useActiveSection(sectionIds);
 
   const isHome = location.pathname === '/';
   const isLacakActive = location.pathname === '/lacak-laporan';
 
+  // Tutup menu jika user klik di luar (opsional UX improvement)
+  useEffect(() => {
+    const handleResize = () => window.innerWidth >= 768 && setOpen(false);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Efek shadow saat scroll (opsional)
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const linkClass = (active) =>
-    `transition-colors ${
-      active ? 'text-blue-800 font-semibold' : 'hover:text-blue-800'
+    `transition-colors duration-300 ${
+      active ? 'text-blue-700 font-bold' : 'text-gray-600 hover:text-blue-700 font-medium'
     }`;
 
   return (
-    <nav className="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-white/60 backdrop-blur-md shadow-lg rounded-full w-[70%] max-w-7xl">
-      <div className="flex items-center justify-between px-6 py-3">
-        {/* Logo */}
-        <NavLink to="/">
-          <img src={LogoWBS} alt="Logo WBS" className="h-12" />
+    // CONTAINER UTAMA
+    // Ubah w-[70%] menjadi responsive: w-[95%] di HP, md:w-[85%], lg:w-[70%]
+    <nav
+      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 
+      w-[95%] md:w-[85%] lg:w-[70%] max-w-7xl
+      bg-white/70 backdrop-blur-lg border border-white/40
+      rounded-full transition-all duration-300
+      ${scrolled ? 'shadow-lg' : 'shadow-md'}
+      `}
+    >
+      <div className="flex items-center justify-between px-4 md:px-6 py-3">
+        
+        {/* === LOGO === */}
+        <NavLink to="/" className="flex-shrink-0">
+          {/* Logo mengecil sedikit di mobile (h-10) dan normal di desktop (md:h-12) */}
+          <img src={LogoWBS} alt="Logo WBS" className="h-9 md:h-12 w-auto transition-all" />
         </NavLink>
 
-        {/* Desktop */}
-        <ul className="hidden md:flex gap-10 font-medium">
+        {/* === DESKTOP MENU === */}
+        <ul className="hidden md:flex gap-6 lg:gap-10 text-sm lg:text-base">
           {sectionIds.map((id) => (
             <li key={id}>
               <HashLink
@@ -45,67 +71,78 @@ const Navbar = () => {
           <li>
             <NavLink
               to="/lacak-laporan"
-              className={({ isActive }) =>
-                linkClass(isActive || isLacakActive)
-              }
+              className={({ isActive }) => linkClass(isActive || isLacakActive)}
             >
               Lacak Laporan
             </NavLink>
           </li>
         </ul>
 
-        {/* Right */}
+        {/* === RIGHT ACTION (Button & Hamburger) === */}
         <div className="flex items-center gap-3">
-          <button className="bg-blue-900 text-white px-5 py-2 rounded-xl hover:bg-blue-800 transition">
+          {/* Button CTA: Ukuran text & padding responsif */}
+          <button className="bg-blue-900 hover:bg-blue-800 text-white 
+            text-xs md:text-sm font-semibold 
+            px-4 py-2 md:px-5 md:py-2.5 
+            rounded-full shadow-md transition-all hover:scale-105 active:scale-95 whitespace-nowrap">
             Ajukan Laporan
           </button>
 
+          {/* Hamburger Menu (Mobile Only) */}
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden p-2 rounded-lg"
+            className="md:hidden p-2 text-blue-900 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors"
+            aria-label="Toggle Menu"
           >
-            {open ? <FiX size={24} /> : <FiMenu size={24} />}
+            {open ? <FiX size={20} /> : <FiMenu size={20} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile */}
-      {open && (
-        <div className="md:hidden absolute right-6 top-full mt-3 bg-white rounded-2xl shadow-lg w-56 py-2">
-          <ul>
-            {sectionIds.map((id) => (
-              <li key={id}>
-                <HashLink
-                  smooth
-                  to={`/#${id}`}
-                  onClick={() => setOpen(false)}
-                  className={`block px-4 py-2 ${
-                    activeSection === id && isHome
-                      ? 'text-blue-800 font-semibold'
-                      : ''
-                  }`}
-                >
-                  {id.charAt(0).toUpperCase() + id.slice(1)}
-                </HashLink>
-              </li>
-            ))}
-
-            <li>
-              <NavLink
-                to="/lacak-laporan"
+      {/* === MOBILE MENU (DROPDOWN) === */}
+      {/* Menggunakan transition-all untuk efek smooth */}
+      <div
+        className={`md:hidden absolute top-full left-0 mt-3 w-full 
+        bg-white/90 backdrop-blur-xl border border-white/50
+        rounded-2xl shadow-xl overflow-hidden transition-all duration-300 ease-in-out origin-top
+        ${open ? 'max-h-96 opacity-100 translate-y-0' : 'max-h-0 opacity-0 -translate-y-2 pointer-events-none'}
+        `}
+      >
+        <ul className="flex flex-col p-4 gap-2 text-center">
+          {sectionIds.map((id) => (
+            <li key={id}>
+              <HashLink
+                smooth
+                to={`/#${id}`}
                 onClick={() => setOpen(false)}
-                className={({ isActive }) =>
-                  `block px-4 py-2 ${
-                    isActive ? 'text-blue-800 font-semibold' : ''
-                  }`
-                }
+                className={`block px-4 py-3 rounded-xl transition-colors ${
+                  activeSection === id && isHome
+                    ? 'bg-blue-100 text-blue-800 font-bold'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
               >
-                Lacak Laporan
-              </NavLink>
+                {id.charAt(0).toUpperCase() + id.slice(1)}
+              </HashLink>
             </li>
-          </ul>
-        </div>
-      )}
+          ))}
+
+          <li>
+            <NavLink
+              to="/lacak-laporan"
+              onClick={() => setOpen(false)}
+              className={({ isActive }) =>
+                `block px-4 py-3 rounded-xl transition-colors ${
+                  isActive || isLacakActive
+                    ? 'bg-blue-100 text-blue-800 font-bold'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`
+              }
+            >
+              Lacak Laporan
+            </NavLink>
+          </li>
+        </ul>
+      </div>
     </nav>
   );
 };
