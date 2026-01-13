@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import LandingPage from "../pages/LandingPage";
+import LoginPage from "../pages/LoginPage";
 
 const router = createBrowserRouter([
     {
@@ -10,6 +11,10 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <LandingPage/>,
+    },
+    {
+        path: "/login",
+        element: <LoginPage/>,
     },
     
 ]);
