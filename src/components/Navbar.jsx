@@ -9,21 +9,19 @@ const sectionIds = ['beranda', 'tentang', 'prosedur', 'bantuan'];
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false); // Opsional: Deteksi scroll
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const activeSection = useActiveSection(sectionIds);
 
   const isHome = location.pathname === '/';
   const isLacakActive = location.pathname === '/lacak-laporan';
 
-  // Tutup menu jika user klik di luar (opsional UX improvement)
   useEffect(() => {
     const handleResize = () => window.innerWidth >= 768 && setOpen(false);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Efek shadow saat scroll (opsional)
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
@@ -36,8 +34,6 @@ const Navbar = () => {
     }`;
 
   return (
-    // CONTAINER UTAMA
-    // Ubah w-[70%] menjadi responsive: w-[95%] di HP, md:w-[85%], lg:w-[70%]
     <nav
       className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 
       w-[95%] md:w-[85%] lg:w-[70%] max-w-7xl
@@ -48,13 +44,10 @@ const Navbar = () => {
     >
       <div className="flex items-center justify-between px-4 md:px-6 py-3">
         
-        {/* === LOGO === */}
         <NavLink to="/" className="flex-shrink-0">
-          {/* Logo mengecil sedikit di mobile (h-10) dan normal di desktop (md:h-12) */}
           <img src={LogoWBS} alt="Logo WBS" className="h-9 md:h-12 w-auto transition-all" />
         </NavLink>
 
-        {/* === DESKTOP MENU === */}
         <ul className="hidden md:flex gap-6 lg:gap-10 text-sm lg:text-base">
           {sectionIds.map((id) => (
             <li key={id}>
@@ -78,9 +71,7 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* === RIGHT ACTION (Button & Hamburger) === */}
         <div className="flex items-center gap-3">
-          {/* Button CTA: Ukuran text & padding responsif */}
           <button className="bg-blue-900 hover:bg-blue-800 text-white 
             text-xs md:text-sm font-semibold 
             px-4 py-2 md:px-5 md:py-2.5 
@@ -88,7 +79,6 @@ const Navbar = () => {
             Ajukan Laporan
           </button>
 
-          {/* Hamburger Menu (Mobile Only) */}
           <button
             onClick={() => setOpen(!open)}
             className="md:hidden p-2 text-blue-900 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors"
@@ -99,8 +89,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* === MOBILE MENU (DROPDOWN) === */}
-      {/* Menggunakan transition-all untuk efek smooth */}
       <div
         className={`md:hidden absolute top-full left-0 mt-3 w-full 
         bg-white/90 backdrop-blur-xl border border-white/50
