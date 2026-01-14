@@ -9,7 +9,7 @@ const Hero = () => {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600 rounded-full mix-blend-screen filter blur-[100px] opacity-20 animate-pulse"></div>
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-900 rounded-full mix-blend-screen filter blur-[100px] opacity-20"></div>
 
-      <div className="container mx-auto px-6 pb-20 flex flex-col-reverse lg:flex-row items-center justify-center gap-10 lg:gap-20 z-10">
+      <div className="container mx-auto px-6 pb-20 flex flex-col-reverse lg:flex-row items-center justify-center gap-10 lg:gap-20 z-10 pt-32 lg:pt-0">
         <div className="flex flex-col gap-4 flex-1 text-center lg:text-left items-center lg:items-start max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-800/40 border border-blue-700/50 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>

@@ -1,4 +1,4 @@
-import Navbar from '../components/navbar';
+import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Hero from '../components/Landing/Hero';
 import Tentang from '../components/Landing/Tentang';

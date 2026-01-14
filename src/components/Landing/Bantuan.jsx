@@ -6,7 +6,6 @@ const Bantuan = () => {
   return (
     <section id="bantuan" className="w-full py-20 bg-slate-200 scroll-mt-20">
       <div className="container mx-auto px-6">
-        {/* === HEADER SECTION === */}
         <div className="flex flex-col items-center text-center mb-12">
           <h2 className="text-blue-900 text-3xl lg:text-4xl font-bold">
             Butuh Bantuan?
@@ -18,7 +17,6 @@ const Bantuan = () => {
           </p>
         </div>
 
-        {/* === KARTU KONTAK UTAMA === */}
         <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-sm border border-slate-300/50 hover:shadow-xl transition-shadow duration-300 max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 items-start">
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left gap-4 group">
@@ -38,7 +36,6 @@ const Bantuan = () => {
               </div>
             </div>
 
-            {/* 2. Email */}
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left gap-4 group">
               <div className="bg-blue-900 text-cyan-400 p-4 rounded-2xl shadow-md group-hover:scale-110 transition-transform">
                 <MdEmail size={28} />
@@ -56,7 +53,6 @@ const Bantuan = () => {
               </div>
             </div>
 
-            {/* 3. Alamat */}
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left gap-4 group">
               <div className="bg-blue-900 text-cyan-400 p-4 rounded-2xl shadow-md group-hover:scale-110 transition-transform">
                 <FaLocationDot size={28} />
@@ -74,10 +70,8 @@ const Bantuan = () => {
             </div>
           </div>
 
-          {/* Garis Pemisah */}
           <div className="w-full h-px bg-slate-200 my-10" />
 
-          {/* === FOOTER NOTE === */}
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-xl flex flex-col sm:flex-row gap-3 items-start sm:items-center">
             <div className="text-yellow-600 min-w-fit">
               <svg
