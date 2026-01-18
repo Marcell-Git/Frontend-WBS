@@ -10,7 +10,6 @@ import {
   FaTimesCircle
 } from "react-icons/fa";
 
-// Komponen kecil untuk menampilkan item data agar kodingan tidak berulang
 const DetailItem = ({ icon, label, value, isFullWidth = false }) => (
   <div className={`flex flex-col gap-1 ${isFullWidth ? "md:col-span-2" : ""}`}>
     <div className="flex items-center gap-2 text-gray-500 mb-1">
@@ -51,11 +50,9 @@ const DetailAduanPage = () => {
           </div>
         </div>
 
-        {/* === CONTENT BODY === */}
         <div className="px-8 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             
-            {/* Row 1: Pelapor & ODP */}
             <DetailItem 
               icon={<FaUser />}
               label="Pelapor" 
@@ -67,7 +64,6 @@ const DetailAduanPage = () => {
               value="Unit A - Dinas Perikanan" 
             />
 
-            {/* Row 2: Subjek & Kasus */}
             <DetailItem 
               icon={<FaUser />}
               label="Subjek Terlapor" 
@@ -79,14 +75,12 @@ const DetailAduanPage = () => {
               value="Pelanggaran Kode Etik" 
             />
 
-            {/* Row 3: Waktu Kejadian */}
             <DetailItem 
               icon={<FaClock />}
               label="Waktu Kejadian" 
               value="10 Maret 2022, Pukul 10.10 WIB" 
             />
 
-            {/* Row 4: Kronologi (Full Width) */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 text-gray-500 mb-2">
                 <FaFileAlt className="text-gray-400" />
@@ -99,7 +93,6 @@ const DetailAduanPage = () => {
               </div>
             </div>
 
-            {/* Row 5: Bukti Pendukung (Full Width) */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 text-gray-500 mb-2">
                 <FaPaperclip className="text-gray-400" />
@@ -107,7 +100,6 @@ const DetailAduanPage = () => {
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* File Item 1 */}
                 <a href="#" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all group">
                   <div className="bg-red-100 p-3 rounded-lg text-red-600 group-hover:bg-white group-hover:text-red-500 transition-colors">
                     <FaFileAlt size={20} />
@@ -118,7 +110,6 @@ const DetailAduanPage = () => {
                   </div>
                 </a>
 
-                {/* File Item 2 */}
                 <a href="#" className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all group">
                   <div className="bg-blue-100 p-3 rounded-lg text-blue-600 group-hover:bg-white group-hover:text-blue-500 transition-colors">
                     <FaFileAlt size={20} />
@@ -134,7 +125,6 @@ const DetailAduanPage = () => {
           </div>
         </div>
 
-        {/* === FOOTER ACTIONS === */}
         <div className="px-8 py-6 bg-gray-50 border-t border-gray-200 flex flex-col-reverse sm:flex-row justify-end gap-3">
           <button
             type="button"
