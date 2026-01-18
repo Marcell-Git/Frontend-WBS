@@ -4,12 +4,14 @@ import { FaClipboardList, FaBars, FaSignOutAlt } from 'react-icons/fa';
 import Logo from '../assets/Logo.svg';
 import { MdAccountCircle } from 'react-icons/md';
 
-export default function Sidebar({ children, activePage, onMenuClick }) {
+import { NavLink } from 'react-router-dom';
+
+export default function Sidebar({ children }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const menus = [
-    { name: 'Aduan', icon: <FaClipboardList />, id: 'Aduan' },
-    { name: 'Akun', icon: <MdAccountCircle />, id: 'Akun' },
+    { name: 'Aduan', icon: <FaClipboardList />, path: '/admin/aduan' },
+    { name: 'Akun', icon: <MdAccountCircle />, path: '/admin/akun' },
   ];
 
   return (
@@ -43,23 +45,22 @@ export default function Sidebar({ children, activePage, onMenuClick }) {
             </div>
 
             {menus.map((menu) => (
-              <button
-                key={menu.id}
-                onClick={() => {
-                  onMenuClick(menu.id); 
-                  setIsOpen(false);
-                }}
-                className={`
+              <NavLink
+                key={menu.path}
+                to={menu.path}
+                onClick={() => setIsOpen(false)}
+                className={({ isActive }) => `
                   w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all
-                  ${activePage === menu.id 
-                    ? "bg-blue-950 text-white shadow-md" 
-                    : "text-gray-600 hover:bg-gray-100"
+                  ${
+                    isActive
+                      ? 'bg-blue-950 text-white shadow-md'
+                      : 'text-gray-600 hover:bg-gray-100'
                   }
                 `}
               >
                 <span className="text-lg">{menu.icon}</span>
                 {menu.name}
-              </button>
+              </NavLink>
             ))}
           </nav>
 

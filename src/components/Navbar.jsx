@@ -30,7 +30,9 @@ const Navbar = () => {
 
   const linkClass = (active) =>
     `transition-colors duration-300 ${
-      active ? 'text-blue-700 font-bold' : 'text-gray-600 hover:text-blue-700 font-medium'
+      active
+        ? 'text-blue-700 font-bold'
+        : 'text-gray-600 hover:text-blue-700 font-medium'
     }`;
 
   return (
@@ -43,9 +45,12 @@ const Navbar = () => {
       `}
     >
       <div className="flex items-center justify-between px-4 md:px-6 py-3">
-        
         <NavLink to="/" className="flex-shrink-0">
-          <img src={LogoWBS} alt="Logo WBS" className="h-9 md:h-12 w-auto transition-all" />
+          <img
+            src={LogoWBS}
+            alt="Logo WBS"
+            className="h-9 md:h-12 w-auto transition-all"
+          />
         </NavLink>
 
         <ul className="hidden md:flex gap-6 lg:gap-10 text-sm lg:text-base">
@@ -72,12 +77,22 @@ const Navbar = () => {
         </ul>
 
         <div className="flex items-center gap-3">
-          <button className="bg-blue-900 hover:bg-blue-800 text-white 
-            text-xs md:text-sm font-semibold 
-            px-4 py-2 md:px-5 md:py-2.5 
-            rounded-full shadow-md transition-all hover:scale-105 active:scale-95 whitespace-nowrap">
+          <NavLink
+            to="/aduan"
+            className={({ isActive }) =>
+              `text-xs md:text-sm font-semibold 
+              px-4 py-2 md:px-5 md:py-2.5 
+              rounded-full shadow-md transition-all 
+              whitespace-nowrap
+              ${
+                isActive
+                  ? 'bg-blue-700 text-white scale-105'
+                  : 'bg-blue-900 hover:bg-blue-800 text-white hover:scale-105 active:scale-95'
+              }`
+            }
+          >
             Ajukan Laporan
-          </button>
+          </NavLink>
 
           <button
             onClick={() => setOpen(!open)}

@@ -4,14 +4,13 @@ const Footer = () => {
   return (
     <footer className="bg-blue-900 pt-12 pb-6">
       <div className="container mx-auto px-6">
-        {/* CONTAINER UTAMA: Flex Column di HP, Flex Row di Laptop */}
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8 mb-8">
           {/* BAGIAN KIRI: Logo & Deskripsi */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-md">
             <img
               src={logoWBS}
               alt="Logo WBS Kabupaten Klaten"
-              className="h-16 w-auto mb-4" // Atur tinggi logo agar proporsional
+              className="h-16 w-auto mb-4" 
             />
             <p className="text-blue-200 text-sm leading-relaxed">
               Wadah Laporan Aman untuk Mewujudkan Pemerintahan yang Bersih,
@@ -19,7 +18,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* BAGIAN KANAN: Kontak */}
           <div className="flex flex-col items-center md:items-end text-center md:text-right">
             <h2 className="text-white text-lg font-bold mb-4 uppercase tracking-wider">
               Kontak Kami
@@ -28,7 +26,7 @@ const Footer = () => {
             <div className="space-y-2 text-blue-200 text-sm">
               <p className="hover:text-white transition-colors cursor-default">
                 <span className="font-semibold text-blue-400">Hotline:</span>{' '}
-                0812-xxxx-xxxx
+                0812-3456-7890
               </p>
               <p className="hover:text-white transition-colors cursor-default">
                 <span className="font-semibold text-blue-400">Email:</span>{' '}
