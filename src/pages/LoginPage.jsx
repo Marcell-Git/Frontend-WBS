@@ -39,7 +39,7 @@ const LoginPage = () => {
       toast.success('Login berhasil');
 
       if(res.user.role === 'admin') {
-        navigate('/admin', { replace: true });
+        navigate('/admin/aduan', { replace: true });
         return;
       }else{
         navigate('/aduan', { replace: true });
