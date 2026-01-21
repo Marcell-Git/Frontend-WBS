@@ -9,6 +9,8 @@ import DetailAduanPage from '../components/Admin/DetailAduanPage';
 import DashboardAduanPage from '../components/Admin/DashboardAduanPage';
 import DashboardAkunPage from '../components/Admin/DashboardAkunPage';
 
+import ProtectedRoute from './ProtectedRoute';
+
 const router = createBrowserRouter([
   {
     path: '*',
@@ -28,7 +30,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: <AdminPage />,
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <AdminPage />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
@@ -50,7 +56,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/aduan',
-    element: <AduanPage />,
+    element: (
+      <ProtectedRoute>
+        <AduanPage />
+      </ProtectedRoute>
+    ),
   },
 ]);
 

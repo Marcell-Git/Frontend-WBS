@@ -6,7 +6,52 @@ import { FaLock, FaUser } from 'react-icons/fa';
 import { IoArrowBackCircle } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { loginApi } from '../api/AuthApi';
+import { toast } from 'react-toastify';
+
 const LoginPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    password: '',
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+
+  const handleLogin = async () => {
+    if (!formData.name || !formData.password) {
+      toast.error('Username dan password wajib diisi');
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await loginApi(formData);
+
+      login(res.access_token, res.user);
+
+      toast.success('Login berhasil');
+
+      if(res.user.role === 'admin') {
+        navigate('/admin', { replace: true });
+        return;
+      }else{
+        navigate('/aduan', { replace: true });
+        return;
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Login gagal');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-200 flex items-center justify-center p-4">
       <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full">
@@ -27,27 +72,41 @@ const LoginPage = () => {
             <h1 className="text-3xl md:text-4xl font-bold text-blue-950 mb-2">
               Login
             </h1>
-            
+
             <p className="text-slate-500 text-sm">
               Masuk untuk melaporkan dugaan pelanggaran
             </p>
           </div>
 
           <form className="flex flex-col gap-2">
-            <FloatingInput id="username" label="Username" icon={FaUser} />
+            <FloatingInput
+              id="name"
+              label="username"
+              icon={FaUser}
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
 
             <FloatingInput
               id="password"
               label="Password"
               type="password"
               icon={FaLock}
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
             />
 
             <button
               type="button"
+              onClick={handleLogin}
+              disabled={loading}
               className="mt-4 w-full bg-blue-950 hover:bg-blue-900 text-white font-bold py-3 px-4 rounded-xl transition duration-300 shadow-lg hover:shadow-xl"
             >
-              Login
+              {loading ? 'Memproses...' : 'Login'}
             </button>
           </form>
 

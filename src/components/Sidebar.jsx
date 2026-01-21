@@ -4,7 +4,10 @@ import { FaClipboardList, FaBars, FaSignOutAlt } from 'react-icons/fa';
 import Logo from '../assets/Logo.svg';
 import { MdAccountCircle } from 'react-icons/md';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 
 export default function Sidebar({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +16,15 @@ export default function Sidebar({ children }) {
     { name: 'Aduan', icon: <FaClipboardList />, path: '/admin/aduan' },
     { name: 'Akun', icon: <MdAccountCircle />, path: '/admin/akun' },
   ];
+
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success('Berhasil logout');
+    navigate('/login');
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -65,7 +77,7 @@ export default function Sidebar({ children }) {
           </nav>
 
           <div className="p-4 border-t border-gray-100">
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
               <FaSignOutAlt />
               <span>Keluar</span>
             </button>

@@ -5,6 +5,8 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import LogoWBS from '../assets/LogoWBS.png';
 import useActiveSection from '../hooks/useActiveSection';
 
+import { useAuth } from '../context/AuthContext';
+
 const sectionIds = ['beranda', 'tentang', 'prosedur', 'bantuan'];
 
 const Navbar = () => {
@@ -15,6 +17,8 @@ const Navbar = () => {
 
   const isHome = location.pathname === '/';
   const isLacakActive = location.pathname === '/lacak-laporan';
+
+  const { token } = useAuth();
 
   useEffect(() => {
     const handleResize = () => window.innerWidth >= 768 && setOpen(false);
@@ -78,7 +82,7 @@ const Navbar = () => {
 
         <div className="flex items-center gap-3">
           <NavLink
-            to="/aduan"
+            to={token ? '/aduan' : '/login'}
             className={({ isActive }) =>
               `text-xs md:text-sm font-semibold 
               px-4 py-2 md:px-5 md:py-2.5 

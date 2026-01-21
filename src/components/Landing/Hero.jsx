@@ -1,6 +1,9 @@
 import LandingImage1 from '../../assets/LandingImage1.svg';
+import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Hero = () => {
+  const { token } = useAuth();
   return (
     <section
       id="beranda"
@@ -36,7 +39,7 @@ const Hero = () => {
 
           <div className="pt-6">
             <button className="group relative inline-flex items-center justify-center px-8 py-3 font-semibold text-white transition-all duration-200 bg-blue-600 rounded-xl hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 shadow-lg shadow-blue-900/50">
-              <span className="mr-2">Ajukan Laporan</span>
+              <NavLink to={token ? '/aduan' : '/login'} className="mr-2">Ajukan Laporan</NavLink>
               <svg
                 className="w-4 h-4 transition-transform group-hover:translate-x-1"
                 fill="none"
