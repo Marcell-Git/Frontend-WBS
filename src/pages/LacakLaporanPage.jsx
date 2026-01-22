@@ -23,6 +23,14 @@ const LacakLaporanPage = () => {
     }
   };
 
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('id-ID', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
   return (
     <>
       <Navbar />
@@ -125,7 +133,10 @@ const LacakLaporanPage = () => {
 
             <div className="flex flex-col items-end gap-1">
               <div className="hidden sm:flex items-center gap-2 text-sm text-gray-500 mb-1">
-                <FaCalendarAlt /> <span>{dataForm.created_at || '-'}</span>
+                <FaCalendarAlt />{' '}
+                <span>
+                  {dataForm.created_at ? formatDate(dataForm.created_at) : '-'}
+                </span>
               </div>
 
               <StatusBadge status={dataForm.status_aduan || '-'} />
@@ -150,7 +161,12 @@ const LacakLaporanPage = () => {
 
               <div className="text-gray-900 font-medium flex items-center gap-2">
                 <FaClock className="text-gray-400" />{' '}
-                {dataForm.waktu_kejadian || '-'}
+                {dataForm.waktu_kejadian
+                  ? new Date(dataForm.waktu_kejadian).toLocaleString('id-ID', {
+                      dateStyle: 'long',
+                      timeStyle: 'short',
+                    })
+                  : '-'}
               </div>
             </div>
 
