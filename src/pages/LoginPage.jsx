@@ -2,7 +2,7 @@ import LogoWBS from '../assets/LogoWBS.png';
 import LoginImage from '../assets/LoginImage.svg';
 import FloatingInput from '../components/Login/FloatingInput';
 import { useState } from 'react';
-import { FaLock, FaUser } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaLock, FaUser } from 'react-icons/fa';
 import { IoArrowBackCircle } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     password: '',
   });
 
@@ -22,9 +22,10 @@ const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
-    if (!formData.name || !formData.password) {
+    if (!formData.username || !formData.password) {
       toast.error('Username dan password wajib diisi');
       return;
     }
@@ -38,10 +39,10 @@ const LoginPage = () => {
 
       toast.success('Login berhasil');
 
-      if(res.user.role === 'admin') {
+      if (res.user.role === 'admin') {
         navigate('/admin/aduan', { replace: true });
         return;
-      }else{
+      } else {
         navigate('/aduan', { replace: true });
         return;
       }
@@ -80,25 +81,34 @@ const LoginPage = () => {
 
           <form className="flex flex-col gap-2">
             <FloatingInput
-              id="name"
-              label="username"
+              id="username"
+              label="Username"
               icon={FaUser}
-              value={formData.name}
+              value={formData.username}
               onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
+                setFormData({ ...formData, username: e.target.value })
               }
             />
 
-            <FloatingInput
-              id="password"
-              label="Password"
-              type="password"
-              icon={FaLock}
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
+            <div className="relative">
+              <FloatingInput
+                id="password"
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                icon={FaLock}
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors z-10 p-1"
+              >
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </button>
+            </div>
 
             <button
               type="button"
@@ -110,7 +120,17 @@ const LoginPage = () => {
             </button>
           </form>
 
-          <div className="mt-6 flex justify-center">
+          <div className="mt-2 flex items-center gap-2 text-slate-500 text-sm font-medium">
+            <span>belum punya akun? </span>
+            <Link
+              to="/register"
+              className="text-blue-600 font-bold hover:text-blue-900"
+            >
+              Daftar sekarang
+            </Link>
+          </div>
+
+          <div className="mt-10 flex justify-center">
             <Link
               to="/"
               className="flex items-center gap-2 text-slate-500 hover:text-blue-950 transition-colors text-sm font-medium"

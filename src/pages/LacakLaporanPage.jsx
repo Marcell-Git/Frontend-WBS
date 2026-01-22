@@ -5,19 +5,18 @@ import { lacakAduanApi } from '../api/AduanApi';
 import { useState } from 'react';
 
 import DOMPurify from 'dompurify';
-import { getFileUrl } from '../api/useAxios';
 
 import StatusBadge from '../components/StatusBadge';
 
 const LacakLaporanPage = () => {
   const [dataForm, setDataForm] = useState([]);
 
-  const [id_aduan, setIdAduan] = useState('');
+  const [kode_tiket, setKodeTiket] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await lacakAduanApi(id_aduan);
+      const response = await lacakAduanApi(kode_tiket);
       setDataForm(response.data);
     } catch (error) {
       console.error('Error fetching aduan:', error);
@@ -51,15 +50,15 @@ const LacakLaporanPage = () => {
 
           <div className="flex flex-col gap-1">
             <label
-              htmlFor="id_aduan"
+              htmlFor="kode_tiket"
               className="block text-sm font-semibold text-gray-700 ml-1"
             >
-              Nomor Aduan
+              Kode Aduan
             </label>
 
             <input
               type="text"
-              id="id_aduan"
+              id="kode_tiket"
               placeholder="Contoh: ADU-2024-001"
               required
               className="
@@ -74,8 +73,8 @@ const LacakLaporanPage = () => {
                   focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 focus:outline-none
                   transition-all duration-200
                 "
-              value={id_aduan}
-              onChange={(e) => setIdAduan(e.target.value)}
+              value={kode_tiket}
+              onChange={(e) => setKodeTiket(e.target.value)}
             />
           </div>
 
@@ -117,10 +116,10 @@ const LacakLaporanPage = () => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-10 border-b border-gray-100 p-6 sm:p-8 bg-gray-50/50">
             <div>
               <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
-                Nomor Aduan
+                Kode Aduan
               </div>
               <span className="text-2xl font-bold text-blue-950">
-                {dataForm.id_aduan || '-'}
+                {dataForm.kode_tiket || '-'}
               </span>
             </div>
 
@@ -176,36 +175,6 @@ const LacakLaporanPage = () => {
                   __html: DOMPurify.sanitize(dataForm?.kronologi),
                 }}
               />
-            </div>
-
-            <div className="md:col-span-2">
-              <div className="text-sm font-medium text-gray-500 mb-2">
-                Dokumen Pendukung
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                {dataForm?.bukti_aduan?.map((bukti, index) => (
-                  <a
-                    key={index}
-                    href={getFileUrl(bukti.file_path)}
-                    target="_blank"
-                    className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all group"
-                  >
-                    <div className="bg-blue-100 p-3 rounded-lg text-blue-600 group-hover:bg-white group-hover:text-blue-500 transition-colors">
-                      <FaFileAlt size={20} />
-                    </div>
-                    <div className="ml-4 overflow-hidden">
-                      <p className="text-sm font-semibold text-gray-700 group-hover:text-blue-700 truncate">
-                        {bukti.nama_file}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {bukti.jenis_file} •{' '}
-                        {(bukti.ukuran / 1024 / 1024).toFixed(2)} MB
-                      </p>
-                    </div>
-                  </a>
-                ))}
-              </div>
             </div>
           </div>
         </div>

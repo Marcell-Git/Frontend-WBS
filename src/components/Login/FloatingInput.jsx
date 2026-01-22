@@ -21,7 +21,7 @@ const FloatingInput = forwardRef(({
     : 'text-gray-500 peer-focus:text-blue-600';
 
   return (
-    <div className={`relative mb-5 ${containerClassName}`}>
+    <div className={`relative ${containerClassName}`}>
       <input
         ref={ref}
         type={type}

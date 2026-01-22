@@ -149,11 +149,11 @@ const DashboardAduanPage = () => {
             <tbody className="divide-y divide-gray-200">
               {data.map((item) => (
                 <tr
-                  className="hover:bg-gray-50 transition-colors"
-                  key={item.id_aduan}
+                  className="hover:bg-gray-50 font-medium transition-colors"
+                  key={item.kode_tiket}
                 >
                   <td className="px-6 py-4 font-medium text-gray-900 font-mono">
-                    #{item.id_aduan}
+                    #{item.kode_tiket}
                   </td>
                   <td className="px-6 py-4">
                     <div className="font-medium text-gray-900">

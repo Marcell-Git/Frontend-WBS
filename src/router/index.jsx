@@ -10,6 +10,7 @@ import DashboardAduanPage from '../components/Admin/DashboardAduanPage';
 import DashboardAkunPage from '../components/Admin/DashboardAkunPage';
 
 import ProtectedRoute from './ProtectedRoute';
+import RegisterPage from '../pages/RegisterPage';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <LandingPage />,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
   },
   {
     path: '/login',

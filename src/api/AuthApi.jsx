@@ -18,3 +18,8 @@ export const logoutApi = async (token) => {
 
   return res.data;
 };
+
+export const registerApi = async (data) => {
+  const response = await useAxios.post('/register', data);
+  return response.data;
+};

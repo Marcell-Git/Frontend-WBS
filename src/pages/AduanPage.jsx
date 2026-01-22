@@ -13,12 +13,15 @@ import { FileText, UploadCloud } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 import KonfirmasiModal from '../components/Modal/KonfirmasiModal';
+import TiketModal from '../components/Modal/TiketModal';
 
 const AduanPage = () => {
   const [odpList, setOdpList] = useState([]);
   const [kategoriAduanList, setKategoriAduanList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showTicket, setShowTicket] = useState(false);
+  const [ticketData, setTicketData] = useState(null);
 
   const { logout } = useAuth();
 
@@ -78,12 +81,12 @@ const AduanPage = () => {
       dataForm.file.forEach((f) => {
         formData.append('file[]', f);
       });
-      await submitAduanApi(formData);
-      toast.success('Aduan berhasil dikirim!');
+      const res = await submitAduanApi(formData);
+      setTicketData(res.data.kode_tiket);
       setIsModalOpen(false);
-
-      await logout();
-
+      setTimeout(() => {
+        setShowTicket(true);
+      }, 300);
     } catch (error) {
       console.error('Error submitting aduan:', error);
       toast.error('Gagal mengirim aduan. Silakan coba lagi.');
@@ -123,19 +126,15 @@ const AduanPage = () => {
     setIsModalOpen(true);
   };
 
+  const handleCloseTicketModal = async () => {
+    setShowTicket(false);
+
+    await logout();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-
-      <KonfirmasiModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={handleSubmit}
-        isSubmitting={isSubmitting}
-        data={dataForm}
-        kategoriList={kategoriAduanList}
-        unitList={odpList}
-      />
 
       <div className="container mx-auto px-4 py-10 mt-20 max-w-4xl">
         <div className="mb-8 text-center">
@@ -356,6 +355,22 @@ const AduanPage = () => {
           </form>
         </div>
       </div>
+
+      <KonfirmasiModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleSubmit}
+        isSubmitting={isSubmitting}
+        data={dataForm}
+        kategoriList={kategoriAduanList}
+        unitList={odpList}
+      />
+
+      <TiketModal
+        isOpen={showTicket}
+        ticketId={ticketData}
+        onClose={handleCloseTicketModal}
+      />
     </div>
   );
 };
