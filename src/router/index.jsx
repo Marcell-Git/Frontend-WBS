@@ -45,7 +45,7 @@ const router = createBrowserRouter([
         element: <DashboardAduanPage />,
       },
       {
-        path: 'aduan/detail',
+        path: 'aduan/detail/:id_aduan',
         element: <DetailAduanPage />,
       },
       {

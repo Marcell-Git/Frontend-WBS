@@ -9,8 +9,11 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
+import LogoutModal from './Modal/LogoutModal';
+
 export default function Sidebar({ children }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const menus = [
     { name: 'Aduan', icon: <FaClipboardList />, path: '/admin/aduan' },
@@ -23,11 +26,17 @@ export default function Sidebar({ children }) {
   const handleLogout = async () => {
     await logout();
     toast.success('Berhasil logout');
+    setIsLogoutModalOpen(false);
     navigate('/login');
   };
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+      <LogoutModal 
+        isOpen={isLogoutModalOpen} 
+        onClose={() => setIsLogoutModalOpen(false)} 
+        onConfirm={handleLogout}      
+      />
       <div
         className={`fixed inset-0 bg-black/50 z-20 transition-opacity md:hidden ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
         onClick={() => setIsOpen(false)}
@@ -77,7 +86,7 @@ export default function Sidebar({ children }) {
           </nav>
 
           <div className="p-4 border-t border-gray-100">
-            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+            <button onClick={() => setIsLogoutModalOpen(true)} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
               <FaSignOutAlt />
               <span>Keluar</span>
             </button>

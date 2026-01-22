@@ -1,7 +1,29 @@
-import { FaCalendarAlt, FaClock, FaFileImage, FaSearch } from 'react-icons/fa';
+import { FaCalendarAlt, FaClock, FaFileAlt, FaSearch } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
 
+import { lacakAduanApi } from '../api/AduanApi';
+import { useState } from 'react';
+
+import DOMPurify from 'dompurify';
+import { getFileUrl } from '../api/useAxios';
+
+import StatusBadge from '../components/StatusBadge';
+
 const LacakLaporanPage = () => {
+  const [dataForm, setDataForm] = useState([]);
+
+  const [id_aduan, setIdAduan] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await lacakAduanApi(id_aduan);
+      setDataForm(response.data);
+    } catch (error) {
+      console.error('Error fetching aduan:', error);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -29,7 +51,7 @@ const LacakLaporanPage = () => {
 
           <div className="flex flex-col gap-1">
             <label
-              htmlFor="nomor_aduan"
+              htmlFor="id_aduan"
               className="block text-sm font-semibold text-gray-700 ml-1"
             >
               Nomor Aduan
@@ -37,7 +59,7 @@ const LacakLaporanPage = () => {
 
             <input
               type="text"
-              id="nomor_aduan"
+              id="id_aduan"
               placeholder="Contoh: ADU-2024-001"
               required
               className="
@@ -52,12 +74,15 @@ const LacakLaporanPage = () => {
                   focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 focus:outline-none
                   transition-all duration-200
                 "
+              value={id_aduan}
+              onChange={(e) => setIdAduan(e.target.value)}
             />
           </div>
 
           <div>
             <button
               type="submit"
+              onClick={handleSubmit}
               className="
                   w-full 
                   bg-blue-950 hover:bg-blue-900 
@@ -95,18 +120,16 @@ const LacakLaporanPage = () => {
                 Nomor Aduan
               </div>
               <span className="text-2xl font-bold text-blue-950">
-                ADU-2024-001
+                {dataForm.id_aduan || '-'}
               </span>
             </div>
 
             <div className="flex flex-col items-end gap-1">
               <div className="hidden sm:flex items-center gap-2 text-sm text-gray-500 mb-1">
-                <FaCalendarAlt /> <span>10 Mei 2024</span>
+                <FaCalendarAlt /> <span>{dataForm.created_at || '-'}</span>
               </div>
 
-              <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-800 ring-1 ring-inset ring-blue-700/10">
-                Sedang diverifikasi
-              </span>
+              <StatusBadge status={dataForm.status_aduan || '-'} />
             </div>
           </div>
 
@@ -117,7 +140,7 @@ const LacakLaporanPage = () => {
               </div>
 
               <div className="text-gray-900 font-medium">
-                Jalan Rusak di Desa A
+                {dataForm.nama_kasus || '-'}
               </div>
             </div>
 
@@ -127,7 +150,8 @@ const LacakLaporanPage = () => {
               </div>
 
               <div className="text-gray-900 font-medium flex items-center gap-2">
-                <FaClock className="text-gray-400" /> 10 Mei 2024, 14:30 WIB
+                <FaClock className="text-gray-400" />{' '}
+                {dataForm.waktu_kejadian || '-'}
               </div>
             </div>
 
@@ -137,7 +161,7 @@ const LacakLaporanPage = () => {
               </div>
 
               <div className="text-gray-900 font-medium">
-                Pelanggaran Kode Etik
+                {dataForm.nama_kategori || '-'}
               </div>
             </div>
 
@@ -146,12 +170,12 @@ const LacakLaporanPage = () => {
                 Kronologi Kejadian
               </div>
 
-              <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100">
-                Saya melihat lubang besar di tengah jalan utama yang menyebabkan
-                kemacetan dan membahayakan pengendara motor. Lubang tersebut
-                sudah ada sejak 3 hari yang lalu akibat hujan deras. Mohon
-                segera ditindaklanjuti.
-              </p>
+              <div
+                className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(dataForm?.kronologi),
+                }}
+              />
             </div>
 
             <div className="md:col-span-2">
@@ -160,19 +184,27 @@ const LacakLaporanPage = () => {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <div className="flex items-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-blue-500 cursor-pointer transition">
-                  <FaFileImage className="text-red-500" />
-                  <span className="text-sm text-gray-700 font-medium">
-                    Foto_Bukti_1.jpg
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-blue-500 cursor-pointer transition">
-                  <FaFileImage className="text-red-500" />
-                  <span className="text-sm text-gray-700 font-medium">
-                    Foto_Bukti_2.jpg
-                  </span>
-                </div>
+                {dataForm?.bukti_aduan?.map((bukti, index) => (
+                  <a
+                    key={index}
+                    href={getFileUrl(bukti.file_path)}
+                    target="_blank"
+                    className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all group"
+                  >
+                    <div className="bg-blue-100 p-3 rounded-lg text-blue-600 group-hover:bg-white group-hover:text-blue-500 transition-colors">
+                      <FaFileAlt size={20} />
+                    </div>
+                    <div className="ml-4 overflow-hidden">
+                      <p className="text-sm font-semibold text-gray-700 group-hover:text-blue-700 truncate">
+                        {bukti.nama_file}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {bukti.jenis_file} •{' '}
+                        {(bukti.ukuran / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </a>
+                ))}
               </div>
             </div>
           </div>

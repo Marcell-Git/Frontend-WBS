@@ -1,4 +1,11 @@
-import { FaEdit } from 'react-icons/fa';
+import {
+  FaCheckCircle,
+  FaClipboardList,
+  FaEdit,
+  FaSearch,
+  FaSpinner,
+  FaTimesCircle,
+} from 'react-icons/fa';
 import { FaFileLines } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,6 +13,8 @@ import { useEffect, useState } from 'react';
 import { showAduanApi, getsummaryAduanApi } from '../../api/AduanApi';
 
 import CountUp from 'react-countup';
+
+import StatusBadge from '../StatusBadge';
 
 const DashboardAduanPage = () => {
   const navigate = useNavigate();
@@ -40,81 +49,75 @@ const DashboardAduanPage = () => {
     });
   };
 
-  const statusStyles = {
-    'Sedang diverifikasi': {
-      bg: 'bg-blue-100',
-      text: 'text-blue-800',
-      ring: 'ring-blue-600/20',
+  const statItems = [
+    {
+      title: 'Total Aduan',
+      count: total,
+      bgIcon: 'bg-fuchsia-100', 
+      textIcon: 'text-fuchsia-600', 
+      icon: <FaClipboardList size={20} />,
     },
-    'Sedang diproses': {
-      bg: 'bg-yellow-100',
-      text: 'text-yellow-800',
-      ring: 'ring-yellow-600/20',
+    {
+      title: 'Aduan Selesai',
+      count: summary.selesai,
+      bgIcon: 'bg-green-100',
+      textIcon: 'text-green-600',
+      icon: <FaCheckCircle size={20} />,
     },
-    Selesai: {
-      bg: 'bg-green-100',
-      text: 'text-green-800',
-      ring: 'ring-green-600/20',
+    {
+      title: 'Proses Penyidikan',
+      count: summary.penyidikan,
+      bgIcon: 'bg-purple-100',
+      textIcon: 'text-purple-600',
+      icon: <FaSearch size={20} />,
     },
-    Ditolak: {
-      bg: 'bg-red-100',
-      text: 'text-red-800',
-      ring: 'ring-red-600/20',
+    {
+      title: 'Sedang Diproses',
+      count: summary.diproses,
+      bgIcon: 'bg-yellow-100',
+      textIcon: 'text-yellow-600',
+      icon: <FaSpinner size={20} />,
     },
-  };
+    {
+      title: 'Sedang Diverifikasi',
+      count: summary.diverifikasi,
+      bgIcon: 'bg-blue-100',
+      textIcon: 'text-blue-600',
+      icon: <FaFileLines size={20} />,
+    },
+    {
+      title: 'Aduan Ditolak',
+      count: summary.ditolak,
+      bgIcon: 'bg-red-100',
+      textIcon: 'text-red-600',
+      icon: <FaTimesCircle size={20} />,
+    },
+  ];
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-        <div className="bg-fuchsia-500 w-full h-28 px-3 py-3 rounded-xl text-fuchsia-800 flex flex-col justify-between shadow-lg">
-          <div className="flex items-center gap-3">
-            <FaFileLines size={26} />
-            <span className="text-lg font-semibold">Total aduan</span>
-          </div>
-          <div>
-            <span className="text-4xl font-bold"><CountUp end={total} duration={1.5} /></span>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {statItems.map((item, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm hover:shadow-md transition-shadow duration-300 flex items-center justify-between"
+          >
+            <div className="flex flex-col">
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                {item.title}
+              </span>
+              <span className="text-2xl font-bold text-gray-800">
+                <CountUp end={item.count} duration={1.5} />
+              </span>
+            </div>
 
-        <div className="bg-green-500 w-full h-28 px-3 py-3 rounded-xl text-green-800 flex flex-col justify-between shadow-lg">
-          <div className="flex items-center gap-3">
-            <FaFileLines size={26} />
-            <span className="text-lg font-semibold">Aduan selesai</span>
+            <div
+              className={`p-3 rounded-lg ${item.bgIcon} ${item.textIcon} flex items-center justify-center`}
+            >
+              {item.icon}
+            </div>
           </div>
-          <div>
-            <span className="text-4xl font-bold"><CountUp end={summary.selesai} duration={1.5} /></span>
-          </div>
-        </div>
-
-        <div className="bg-blue-500 w-full h-28 px-3 py-3 rounded-xl text-blue-800 flex flex-col justify-between shadow-lg">
-          <div className="flex items-center gap-3">
-            <FaFileLines size={26} />
-            <span className="text-lg font-semibold">Sedang diverifikasi</span>
-          </div>
-          <div>
-            <span className="text-4xl font-bold"><CountUp end={summary.diverifikasi} duration={1.5} /></span>
-          </div>
-        </div>
-
-        <div className="bg-yellow-500 w-full h-28 px-3 py-3 rounded-xl text-yellow-800 flex flex-col justify-between shadow-lg">
-          <div className="flex items-center gap-3">
-            <FaFileLines size={26} />
-            <span className="text-lg font-semibold">Sedang diproses</span>
-          </div>
-          <div>
-            <span className="text-4xl font-bold"><CountUp end={summary.diproses} duration={1.5} /></span>
-          </div>
-        </div>
-
-        <div className="bg-red-500 w-full h-28 px-3 py-3 rounded-xl text-red-800 flex flex-col justify-between shadow-lg">
-          <div className="flex items-center gap-3">
-            <FaFileLines size={26} />
-            <span className="text-lg font-semibold">Aduan ditolak</span>
-          </div>
-          <div>
-            <span className="text-4xl font-bold"><CountUp end={summary.ditolak} duration={1.5} /></span>
-          </div>
-        </div>
+        ))}
       </div>
 
       <div className="w-full overflow-hidden rounded-xl border border-gray-200 shadow-sm bg-white mt-10">
@@ -166,15 +169,13 @@ const DashboardAduanPage = () => {
                     {formatDate(item.waktu_kejadian)}
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span
-                      className={`inline-flex items-center rounded-full ${statusStyles[item.status_aduan]?.bg} px-3 py-1 text-xs font-bold ${statusStyles[item.status_aduan]?.text} ring-1 ring-inset ${statusStyles[item.status_aduan]?.ring}`}
-                    >
-                      {item.status_aduan}
-                    </span>
+                    <StatusBadge status={item.status_aduan} />
                   </td>
                   <td className="px-6 py-4 text-center">
                     <button
-                      onClick={() => navigate('/admin/aduan/detail')}
+                      onClick={() =>
+                        navigate(`/admin/aduan/detail/${item.id_aduan}`)
+                      }
                       className="group relative inline-flex items-center justify-center rounded-lg p-2 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-200"
                       title="Edit Data"
                     >

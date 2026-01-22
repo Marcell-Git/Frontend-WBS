@@ -10,10 +10,17 @@ import { showODPApi } from '../api/ODPApi';
 import { showKategoriAduanApi } from '../api/KategoriAduanApi';
 import { toast } from 'react-toastify';
 import { FileText, UploadCloud } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+
+import KonfirmasiModal from '../components/Modal/KonfirmasiModal';
 
 const AduanPage = () => {
   const [odpList, setOdpList] = useState([]);
   const [kategoriAduanList, setKategoriAduanList] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { logout } = useAuth();
 
   const fetchAllData = async () => {
     try {
@@ -42,7 +49,7 @@ const AduanPage = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
 
     setDataForm((prev) => ({
       ...prev,
@@ -54,12 +61,12 @@ const AduanPage = () => {
     const newFiles = Array.from(e.target.files);
     setDataForm((prev) => ({
       ...prev,
-      file: [...(prev.file || []), ...newFiles], // simpan semua file sebelumnya + yang baru
+      file: [...(prev.file || []), ...newFiles],
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
       const formData = new FormData();
       formData.append('nama_kasus', dataForm.nama_kasus);
@@ -73,9 +80,15 @@ const AduanPage = () => {
       });
       await submitAduanApi(formData);
       toast.success('Aduan berhasil dikirim!');
+      setIsModalOpen(false);
+
+      await logout();
+
     } catch (error) {
       console.error('Error submitting aduan:', error);
       toast.error('Gagal mengirim aduan. Silakan coba lagi.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -101,9 +114,28 @@ const AduanPage = () => {
     'link',
   ];
 
+  const handleCheckBeforeSubmit = (e) => {
+    e.preventDefault();
+    if (!dataForm.id_kategori || !dataForm.nama_kasus || !dataForm.kronologi) {
+      toast.error('Mohon lengkapi data wajib (bertanda *)');
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
+
+      <KonfirmasiModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleSubmit}
+        isSubmitting={isSubmitting}
+        data={dataForm}
+        kategoriList={kategoriAduanList}
+        unitList={odpList}
+      />
 
       <div className="container mx-auto px-4 py-10 mt-20 max-w-4xl">
         <div className="mb-8 text-center">
@@ -114,7 +146,7 @@ const AduanPage = () => {
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          <form>
+          <form onSubmit={handleCheckBeforeSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col gap-2">
                 <label
@@ -315,7 +347,6 @@ const AduanPage = () => {
             <div className="flex justify-end mt-8 pt-6 border-t border-gray-100">
               <button
                 type="submit"
-                onClick={handleSubmit}
                 className="flex items-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0"
               >
                 <span>Kirim Aduan</span>
