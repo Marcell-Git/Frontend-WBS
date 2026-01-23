@@ -24,12 +24,14 @@ const DashboardAduanPage = () => {
   const [lastPage, setLastPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [summary, setSummary] = useState({});
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await showAduanApi(page);
+        const result = await showAduanApi(search,page);
         const summaryResult = await getsummaryAduanApi();
+        console.log(result);
         setSummary(summaryResult);
         setData(result.data);
         setLastPage(result.last_page);
@@ -39,7 +41,7 @@ const DashboardAduanPage = () => {
       }
     };
     fetchData();
-  }, [page]);
+  }, [search, page]);
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('id-ID', {
@@ -121,6 +123,23 @@ const DashboardAduanPage = () => {
       </div>
 
       <div className="w-full overflow-hidden rounded-xl border border-gray-200 shadow-sm bg-white mt-10">
+        <div className="border-b border-gray-200 px-6 py-4 bg-white flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full sm:max-w-md">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <FaSearch className="h-4 w-4 text-gray-400" aria-hidden="true" />
+            </div>
+            <input
+              type="text"
+              placeholder="Cari kode aduan, pelapor, atau judul..."
+              className="block w-full rounded-lg border-0 py-2.5 pl-10 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 transition-shadow"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+            />
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-gray-500">
             <thead className="bg-gray-50 text-xs uppercase text-gray-700">

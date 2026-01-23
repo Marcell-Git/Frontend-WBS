@@ -15,20 +15,7 @@ import { toast } from 'react-toastify';
 import { detailAduanApi, updateStatusAduanApi } from '../../../api/AduanApi';
 import DOMPurify from 'dompurify';
 import { getFileUrl } from '../../../api/useAxios';
-
-const DetailItem = ({ icon, label, value, isFullWidth = false }) => (
-  <div className={`flex flex-col gap-1 ${isFullWidth ? 'md:col-span-2' : ''}`}>
-    <div className="flex items-center gap-2 text-gray-500 mb-1">
-      {icon && <span className="text-gray-400">{icon}</span>}
-      <span className="text-xs font-semibold uppercase tracking-wider">
-        {label}
-      </span>
-    </div>
-    <div className="text-gray-900 font-medium text-base bg-gray-50 px-4 py-3 rounded-lg border border-gray-100">
-      {value}
-    </div>
-  </div>
-);
+import DetailItem from '../DetailItem';
 
 const DetailAduanPage = () => {
   const { id_aduan } = useParams();
@@ -61,13 +48,21 @@ const DetailAduanPage = () => {
   }
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('id-ID', {
+    const d = new Date(date);
+
+    const tanggal = d.toLocaleDateString('id-ID', {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
     });
-  };
 
+    const waktu = d.toLocaleTimeString('id-ID', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    return `${tanggal} ${waktu}`;
+  };
   const statusStyles = {
     'Sedang diverifikasi': {
       bg: 'bg-blue-100',
@@ -164,17 +159,6 @@ const DetailAduanPage = () => {
               value={aduanDetail?.nama_pengadu}
             />
             <DetailItem
-              icon={<FaBuilding />}
-              label="ODP / Unit Terkait"
-              value={aduanDetail?.nama_unit}
-            />
-
-            <DetailItem
-              icon={<FaUser />}
-              label="Subjek Terlapor"
-              value={aduanDetail?.subjek_pelaku}
-            />
-            <DetailItem
               icon={<FaExclamationTriangle />}
               label="Kategori Kasus"
               value={aduanDetail?.nama_kategori}
@@ -200,6 +184,36 @@ const DetailAduanPage = () => {
                 }}
               />
             </div>
+
+            {aduanDetail?.pelaku.map((pelaku, index) => (
+              <div
+                key={index}
+                className="bg-gray-50 border border-gray-200 rounded-lg p-4"
+              >
+                <div className="mb-3 border-b border-gray-200 pb-2">
+                  <span className="text-sm font-semibold text-gray-500">
+                    Terlapor #{index + 1}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <DetailItem
+                    icon={<FaUser className="text-blue-500" />}
+                    label="Nama & Jabatan"
+                    value={
+                      <span className="font-medium">
+                        {pelaku.nama} - {pelaku.jabatan}
+                      </span>
+                    }
+                  />
+                  <DetailItem
+                    icon={<FaBuilding className="text-green-500" />}
+                    label="Unit / ODP"
+                    value={pelaku.nama_unit}
+                  />
+                </div>
+              </div>
+            ))}
 
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 text-gray-500 mb-2">

@@ -1,7 +1,12 @@
 import useAxios from "./useAxios";
 
-export const showAduanApi = async (page = 1) => {
-  const response = await useAxios.get(`/aduan?page=${page}`);
+export const showAduanApi = async (search, page) => {
+  const response = await useAxios.get('/aduan', {
+    params: {
+      search,
+      page,
+    },
+  });
   return response.data;
 };
 

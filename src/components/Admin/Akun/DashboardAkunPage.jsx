@@ -59,7 +59,6 @@ const UserAvatar = ({ name }) => {
   );
 };
 
-
 const DashboardAkunPage = () => {
   const navigate = useNavigate();
 
@@ -78,10 +77,10 @@ const DashboardAkunPage = () => {
       const resultData = response.data;
       const meta = response;
 
-      setData(resultData );
-      setTotal(meta.total );
-      setPerPage(meta.per_page );
-      setLastPage(meta.last_page );
+      setData(resultData);
+      setTotal(meta.total);
+      setPerPage(meta.per_page);
+      setLastPage(meta.last_page);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
@@ -253,36 +252,26 @@ const DashboardAkunPage = () => {
           </table>
         </div>
 
-        <div className="border-t border-gray-200 bg-white px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-gray-600">
-            Menampilkan{' '}
-            <span className="font-semibold text-gray-900">
-              {(page - 1) * perPage + 1}
-            </span>{' '}
-            sampai{' '}
-            <span className="font-semibold text-gray-900">
-              {Math.min(page * perPage, total)}
-            </span>{' '}
-            dari <span className="font-semibold text-gray-900">{total}</span>{' '}
-            hasil
+        <div className="flex items-center justify-between border-t border-gray-200 bg-gray-50 px-6 py-3">
+          <div className="text-xs text-gray-500">
+            Page <span className="font-medium">{page}</span> dari{' '}
+            <span className="font-medium">{lastPage}</span> total{' '}
+            <span className="font-medium">{total}</span> data
           </div>
-
-          <div className="inline-flex -space-x-px rounded-md shadow-sm isolate">
+          <div className="flex gap-2">
             <button
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-              disabled={page === 1 || loading}
-              className="relative inline-flex items-center rounded-l-md px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs font-medium text-gray-600 hover:text-indigo-600 disabled:opacity-50"
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
             >
-              <FaChevronLeft className="h-4 w-4" />
-              <span className="ml-1 text-sm font-medium">Prev</span>
+              Prev
             </button>
             <button
-              onClick={() => setPage((prev) => prev + 1)}
-              disabled={page === lastPage || loading}
-              className="relative inline-flex items-center rounded-r-md px-3 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs font-medium text-gray-600 hover:text-indigo-600"
+              disabled={page === lastPage}
+              onClick={() => setPage(page + 1)}
             >
-              <span className="mr-1 text-sm font-medium">Next</span>
-              <FaChevronRight className="h-4 w-4" />
+              Next
             </button>
           </div>
         </div>
