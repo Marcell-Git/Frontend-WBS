@@ -5,12 +5,13 @@ import LoginPage from '../pages/LoginPage';
 import LacakLaporanPage from '../pages/LacakLaporanPage';
 import AdminPage from '../pages/AdminPage';
 import AduanPage from '../pages/AduanPage';
-import DetailAduanPage from '../components/Admin/DetailAduanPage';
-import DashboardAduanPage from '../components/Admin/DashboardAduanPage';
-import DashboardAkunPage from '../components/Admin/DashboardAkunPage';
+import DetailAduanPage from '../components/Admin/Aduan/DetailAduanPage';
+import DashboardAduanPage from '../components/Admin/Aduan/DashboardAduanPage';
+import DashboardAkunPage from '../components/Admin/Akun/DashboardAkunPage';
 
 import ProtectedRoute from './ProtectedRoute';
 import RegisterPage from '../pages/RegisterPage';
+import DetailAkunPage from '../components/Admin/Akun/DetailAkunPage';
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: 'akun',
         element: <DashboardAkunPage />,
+      },
+      {
+        path: 'akun/detail/:id_user',
+        element: <DetailAkunPage />,
       },
     ],
   },

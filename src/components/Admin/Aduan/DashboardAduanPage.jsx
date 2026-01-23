@@ -10,11 +10,11 @@ import { FaFileLines } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
-import { showAduanApi, getsummaryAduanApi } from '../../api/AduanApi';
+import { showAduanApi, getsummaryAduanApi } from '../../../api/AduanApi';
 
 import CountUp from 'react-countup';
 
-import StatusBadge from '../StatusBadge';
+import StatusBadge from '../../StatusBadge';
 
 const DashboardAduanPage = () => {
   const navigate = useNavigate();

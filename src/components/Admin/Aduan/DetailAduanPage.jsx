@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   FaUser,
   FaBuilding,
@@ -13,9 +12,9 @@ import {
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { detailAduanApi, updateStatusAduanApi } from '../../api/AduanApi';
+import { detailAduanApi, updateStatusAduanApi } from '../../../api/AduanApi';
 import DOMPurify from 'dompurify';
-import { getFileUrl } from '../../api/useAxios';
+import { getFileUrl } from '../../../api/useAxios';
 
 const DetailItem = ({ icon, label, value, isFullWidth = false }) => (
   <div className={`flex flex-col gap-1 ${isFullWidth ? 'md:col-span-2' : ''}`}>
