@@ -96,7 +96,6 @@ const DashboardAkunPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50/50 p-6 font-sans">
-      {/* Header Halaman */}
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -144,7 +143,7 @@ const DashboardAkunPage = () => {
                   Role
                 </th>
                 <th scope="col" className="px-6 py-4 text-center w-24">
-                  Aksi
+                  Action
                 </th>
               </tr>
             </thead>

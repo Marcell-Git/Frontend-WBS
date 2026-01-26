@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
 import LogoutModal from './Modal/LogoutModal';
+import { FaBuilding } from 'react-icons/fa6';
 
 export default function Sidebar({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ export default function Sidebar({ children }) {
   const menus = [
     { name: 'Aduan', icon: <FaClipboardList />, path: '/admin/aduan' },
     { name: 'Akun', icon: <MdAccountCircle />, path: '/admin/akun' },
+    { name: 'Daftar Unit', icon : <FaBuilding />, path: '/admin/unit' },
   ];
 
   const { logout } = useAuth();

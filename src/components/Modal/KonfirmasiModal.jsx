@@ -54,18 +54,17 @@ const KonfirmasiModal = ({
                 {getKategoriName(data.id_kategori)}
               </span>
             </div>
-            <div className="grid grid-cols-3 gap-2 text-sm">
-              <span className="text-gray-500 font-medium">Unit Terkait</span>
-              <span className="col-span-2 text-gray-800">
-                {getUnitName(data.id_unit)}
-              </span>
-            </div>
-            <div className="grid grid-cols-3 gap-2 text-sm">
-              <span className="text-gray-500 font-medium">Terlapor</span>
-              <span className="col-span-2 text-gray-800">
-                {data.subjek_pelaku || '-'}
-              </span>
-            </div>
+            {data?.pelaku.map((pelaku, index)=>(
+              <>
+              <div className="grid grid-cols-3 gap-2 text-sm">
+                <span className="text-gray-500 font-medium">{`Terlapor #${index + 1}`}</span>
+                <span className="col-span-2 text-gray-800">
+                  {getUnitName(pelaku.id_unit)} - {pelaku.nama} ({pelaku.jabatan})
+                </span>
+              </div>
+
+              </>
+            ))}
             <div className="grid grid-cols-3 gap-2 text-sm">
               <span className="text-gray-500 font-medium">Waktu</span>
               <span className="col-span-2 text-gray-800">

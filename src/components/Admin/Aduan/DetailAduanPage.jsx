@@ -199,7 +199,7 @@ const DetailAduanPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <DetailItem
                     icon={<FaUser className="text-blue-500" />}
-                    label="Nama & Jabatan"
+                    label="Nama - Jabatan"
                     value={
                       <span className="font-medium">
                         {pelaku.nama} - {pelaku.jabatan}

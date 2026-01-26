@@ -12,6 +12,7 @@ import DashboardAkunPage from '../components/Admin/Akun/DashboardAkunPage';
 import ProtectedRoute from './ProtectedRoute';
 import RegisterPage from '../pages/RegisterPage';
 import DetailAkunPage from '../components/Admin/Akun/DetailAkunPage';
+import Unit from '../components/Admin/Unit/Unit';
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: 'akun/detail/:id_user',
         element: <DetailAkunPage />,
+      },
+      {
+        path: 'unit',
+        element: <Unit />,
       },
     ],
   },
