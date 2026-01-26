@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react';
-import { MdAccessTime, MdSend, MdAdd, MdDeleteOutline, MdPerson, MdWork, MdBusiness, MdInfoOutline } from 'react-icons/md';
+import {
+  MdAccessTime,
+  MdSend,
+  MdAdd,
+  MdDeleteOutline,
+  MdPerson,
+  MdWork,
+  MdBusiness,
+  MdInfoOutline,
+} from 'react-icons/md';
 import { FileText, UploadCloud, X } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -9,7 +18,7 @@ import Navbar from '../components/Navbar';
 import KonfirmasiModal from '../components/Modal/KonfirmasiModal';
 import TiketModal from '../components/Modal/TiketModal';
 import { submitAduanApi } from '../api/AduanApi';
-import { showODPApi } from '../api/ODPApi';
+import { getAllODPApi } from '../api/ODPApi';
 import { showKategoriAduanApi } from '../api/KategoriAduanApi';
 import { useAuth } from '../context/AuthContext';
 
@@ -25,8 +34,8 @@ const AduanPage = () => {
 
   const fetchAllData = async () => {
     try {
-      const odpData = await showODPApi();
-      setOdpList(odpData.data);
+      const odpData = await getAllODPApi();
+      setOdpList(odpData);
       const kategoriData = await showKategoriAduanApi();
       setKategoriAduanList(kategoriData);
     } catch (error) {
@@ -52,6 +61,24 @@ const AduanPage = () => {
     ],
     file: [],
   });
+
+  const isEmpty = (val) =>
+    val === null ||
+    val === undefined ||
+    (typeof val === 'string' && val.trim() === '');
+
+  const isDataFormValid =
+    !isEmpty(dataForm.nama_kasus) &&
+    !isEmpty(dataForm.kronologi) &&
+    !isEmpty(dataForm.waktu_kejadian) &&
+    !isEmpty(dataForm.id_kategori) &&
+    Array.isArray(dataForm.pelaku) &&
+    dataForm.pelaku.length > 0 &&
+    dataForm.pelaku.every(
+      (p) => !isEmpty(p.nama) && !isEmpty(p.jabatan) && !isEmpty(p.id_unit),
+    ) &&
+    Array.isArray(dataForm.file) &&
+    dataForm.file.length > 0;
 
   const tambahPelaku = () => {
     setDataForm({
@@ -102,8 +129,8 @@ const AduanPage = () => {
 
   const handleCheckBeforeSubmit = (e) => {
     e.preventDefault();
-    if (!dataForm.id_kategori || !dataForm.nama_kasus || !dataForm.kronologi) {
-      toast.error('Mohon lengkapi data wajib (Kategori, Judul, Kronologi)');
+    if (!isDataFormValid) {
+      toast.error('Mohon lengkapi seluruh data sebelum dikirim');
       return;
     }
     setIsModalOpen(true);
@@ -117,13 +144,13 @@ const AduanPage = () => {
       formData.append('kronologi', dataForm.kronologi);
       formData.append('waktu_kejadian', dataForm.waktu_kejadian);
       formData.append('id_kategori', dataForm.id_kategori);
-      
+
       dataForm.pelaku.forEach((p, i) => {
         formData.append(`pelaku[${i}][nama]`, p.nama);
         formData.append(`pelaku[${i}][jabatan]`, p.jabatan);
         formData.append(`pelaku[${i}][id_unit]`, p.id_unit);
       });
-      
+
       if (dataForm.file) {
         dataForm.file.forEach((f) => {
           formData.append('file[]', f);
@@ -165,21 +192,25 @@ const AduanPage = () => {
 
       <div className="container mx-auto px-4 mt-24 max-w-5xl">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-extrabold text-gray-900">Formulir Pengaduan</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900">
+            Formulir Pengaduan
+          </h1>
           <p className="text-gray-500 mt-2">
-            Isi formulir di bawah ini dengan lengkap. Identitas pelapor dirahasiakan.
+            Isi formulir di bawah ini dengan lengkap. Identitas pelapor
+            dirahasiakan.
           </p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-10">
           <form onSubmit={handleCheckBeforeSubmit} className="space-y-10">
-            
             <div>
               <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-3">
                 <MdInfoOutline className="text-blue-600 text-xl" />
-                <h3 className="text-lg font-bold text-gray-800">Detail Kasus</h3>
+                <h3 className="text-lg font-bold text-gray-800">
+                  Detail Kasus
+                </h3>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-semibold text-gray-700">
@@ -193,7 +224,10 @@ const AduanPage = () => {
                   >
                     <option value="">-- Pilih Kategori --</option>
                     {kategoriAduanList.map((kategori) => (
-                      <option key={kategori.id_kategori} value={kategori.id_kategori}>
+                      <option
+                        key={kategori.id_kategori}
+                        value={kategori.id_kategori}
+                      >
                         {kategori.nama_kategori}
                       </option>
                     ))}
@@ -238,7 +272,9 @@ const AduanPage = () => {
               <div className="flex items-center justify-between mb-6 border-b border-gray-100 pb-3">
                 <div className="flex items-center gap-2">
                   <MdPerson className="text-blue-600 text-xl" />
-                  <h3 className="text-lg font-bold text-gray-800">Pihak Terlapor</h3>
+                  <h3 className="text-lg font-bold text-gray-800">
+                    Pihak Terlapor
+                  </h3>
                 </div>
                 <button
                   type="button"
@@ -251,7 +287,10 @@ const AduanPage = () => {
 
               <div className="space-y-4">
                 {dataForm.pelaku.map((pelaku, index) => (
-                  <div key={index} className="bg-gray-50 p-6 rounded-xl border border-gray-200 relative">
+                  <div
+                    key={index}
+                    className="bg-gray-50 p-6 rounded-xl border border-gray-200 relative"
+                  >
                     {dataForm.pelaku.length > 1 && (
                       <button
                         type="button"
@@ -261,10 +300,12 @@ const AduanPage = () => {
                         <MdDeleteOutline size={22} />
                       </button>
                     )}
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-bold text-gray-500 uppercase">Unit / ODP</label>
+                        <label className="text-xs font-bold text-gray-500 uppercase">
+                          Unit / ODP
+                        </label>
                         <select
                           name="id_unit"
                           value={pelaku.id_unit}
@@ -273,13 +314,17 @@ const AduanPage = () => {
                         >
                           <option value="">-- Pilih Unit --</option>
                           {odpList.map((odp) => (
-                            <option key={odp.id_unit} value={odp.id_unit}>{odp.nama_unit}</option>
+                            <option key={odp.id_unit} value={odp.id_unit}>
+                              {odp.nama_unit}
+                            </option>
                           ))}
                         </select>
                       </div>
-                      
+
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-bold text-gray-500 uppercase">Nama Terlapor</label>
+                        <label className="text-xs font-bold text-gray-500 uppercase">
+                          Nama Terlapor
+                        </label>
                         <input
                           name="nama"
                           type="text"
@@ -291,13 +336,15 @@ const AduanPage = () => {
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-bold text-gray-500 uppercase">Jabatan</label>
+                        <label className="text-xs font-bold text-gray-500 uppercase">
+                          Jabatan
+                        </label>
                         <input
                           name="jabatan"
                           type="text"
                           value={pelaku.jabatan}
                           onChange={(e) => handlePelakuChange(index, e)}
-                          placeholder="Opsional"
+                          placeholder="Jabatan / Posisi"
                           className="w-full rounded-md border border-gray-300 px-3 py-2.5 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none"
                         />
                       </div>
@@ -310,14 +357,18 @@ const AduanPage = () => {
             <div>
               <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-3">
                 <FileText className="text-blue-600 w-5 h-5" />
-                <h3 className="text-lg font-bold text-gray-800">Kronologi Kejadian</h3>
+                <h3 className="text-lg font-bold text-gray-800">
+                  Kronologi Kejadian
+                </h3>
               </div>
-              
+
               <div className="flex flex-col gap-2">
                 <ReactQuill
                   theme="snow"
                   value={dataForm.kronologi}
-                  onChange={(value) => setDataForm({ ...dataForm, kronologi: value })}
+                  onChange={(value) =>
+                    setDataForm({ ...dataForm, kronologi: value })
+                  }
                   modules={modules}
                   placeholder="Ceritakan detail kejadian (Apa, Siapa, Kapan, Dimana, Mengapa, Bagaimana)..."
                   className="h-64 mb-12"
@@ -328,7 +379,9 @@ const AduanPage = () => {
             <div>
               <div className="flex items-center gap-2 mb-6 border-b border-gray-100 pb-3">
                 <UploadCloud className="text-blue-600 w-5 h-5" />
-                <h3 className="text-lg font-bold text-gray-800">Bukti Dukung</h3>
+                <h3 className="text-lg font-bold text-gray-800">
+                  Bukti Dukung
+                </h3>
               </div>
 
               <div className="w-full">
@@ -338,8 +391,12 @@ const AduanPage = () => {
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <UploadCloud className="w-8 h-8 text-gray-400 mb-3" />
-                    <p className="mb-1 text-sm text-gray-700 font-semibold">Klik untuk upload file</p>
-                    <p className="text-xs text-gray-500">PDF, JPG, PNG (Max 5MB)</p>
+                    <p className="mb-1 text-sm text-gray-700 font-semibold">
+                      Klik untuk upload file
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      PDF, JPG, PNG (Max 5MB)
+                    </p>
                   </div>
                   <input
                     id="file"
@@ -355,17 +412,22 @@ const AduanPage = () => {
                 {dataForm.file && dataForm.file.length > 0 && (
                   <div className="mt-4 space-y-2">
                     {Array.from(dataForm.file).map((f, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100">
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100"
+                      >
                         <div className="flex items-center gap-3 overflow-hidden">
                           <FileText className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                          <span className="text-sm text-gray-700 truncate">{f.name}</span>
+                          <span className="text-sm text-gray-700 truncate">
+                            {f.name}
+                          </span>
                         </div>
-                        <button 
-                           type="button" 
-                           onClick={() => removeFile(idx)}
-                           className="text-gray-400 hover:text-red-500 transition-colors"
+                        <button
+                          type="button"
+                          onClick={() => removeFile(idx)}
+                          className="text-gray-400 hover:text-red-500 transition-colors"
                         >
-                           <X size={18} />
+                          <X size={18} />
                         </button>
                       </div>
                     ))}
@@ -383,7 +445,6 @@ const AduanPage = () => {
                 <MdSend size={20} />
               </button>
             </div>
-
           </form>
         </div>
       </div>

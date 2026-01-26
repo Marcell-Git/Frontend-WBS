@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { showODPApi, createODPApi, deleteODPApi } from '../../../api/ODPApi';
 import { FaSearch } from 'react-icons/fa';
 import { MdAdd, MdBusiness, MdDelete, MdSave } from 'react-icons/md';
+
+import { showODPApi, createODPApi, deleteODPApi } from '../../../api/ODPApi';
+
+import DeleteModal from '../../Modal/DeleteModal';
 
 const Unit = () => {
   const [units, setUnits] = useState([]);
@@ -12,19 +15,23 @@ const Unit = () => {
   const [total, setTotal] = useState(0);
   const [lastPage, setLastPage] = useState(1);
   const [nama_unit, setNamaUnit] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedUnitId, setSelectedUnitId] = useState(null);
+
+  const fetchUnits = async () => {
+    try {
+      const data = await showODPApi(search, page);
+      setUnits(data.data);
+      setTotal(data.total);
+      setLastPage(data.last_page);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching units:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchUnits = async () => {
-      try {
-        const data = await showODPApi(search, page);
-        setUnits(data.data);
-        setTotal(data.total);
-        setLastPage(data.last_page);
-      } catch (error) {
-        console.error('Error fetching units:', error);
-      }
-    };
-
     fetchUnits();
   }, [search, page]);
 
@@ -45,18 +52,31 @@ const Unit = () => {
     }
   };
 
-  const handleDeleteUnit = async (id) => {
+  const handlerDeleteConfirm = (id) => {
+    setSelectedUnitId(id);
+    setIsOpen(true);
+    console.log('Selected Unit ID for deletion:', id);
+  };
+
+  const handleDeleteUnit = async () => {
     try {
-      await deleteODPApi(id);
-      const data = await showODPApi(search, page);
-      setUnits(data.data);
-      setTotal(data.total);
-      setLastPage(data.last_page);
+      await deleteODPApi(selectedUnitId);
+      fetchUnits();
+      setIsOpen(false);
       toast.success('Unit berhasil dihapus');
     } catch (error) {
       console.error('Error deleting unit:', error);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-4"></div>
+        <p className="text-gray-500 text-sm font-medium">Memuat data unit...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50/50 p-6 font-sans">
@@ -71,7 +91,7 @@ const Unit = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           <div className="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
             <div className="flex items-center gap-2 mb-4 border-b border-gray-100 pb-3">
@@ -172,7 +192,7 @@ const Unit = () => {
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-center">
                           <button
-                            onClick={() => {}}
+                            onClick={() => handlerDeleteConfirm(unit.id_unit)}
                             className="group relative inline-flex items-center justify-center rounded-lg p-2 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
                             title="Hapus Data"
                           >
@@ -195,7 +215,6 @@ const Unit = () => {
               </table>
             </div>
 
-            {/* Footer Table (Pagination placeholder) */}
             <div className="flex items-center justify-between border-t border-gray-200 bg-gray-50 px-6 py-3">
               <div className="text-xs text-gray-500">
                 Page <span className="font-medium">{page}</span> dari{' '}
@@ -222,6 +241,13 @@ const Unit = () => {
           </div>
         </div>
       </div>
+      <DeleteModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onConfirm={() => handleDeleteUnit(selectedUnitId)}
+        title="Hapus Unit?"
+        message="Unit yang dihapus tidak akan bisa dikembalikan lagi."
+      />
     </div>
   );
 };

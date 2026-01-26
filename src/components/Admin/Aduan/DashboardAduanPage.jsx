@@ -25,23 +25,35 @@ const DashboardAduanPage = () => {
   const [total, setTotal] = useState(0);
   const [summary, setSummary] = useState({});
   const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await showAduanApi(search,page);
         const summaryResult = await getsummaryAduanApi();
-        console.log(result);
         setSummary(summaryResult);
         setData(result.data);
         setLastPage(result.last_page);
         setTotal(result.total);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching aduan data:', error);
       }
     };
     fetchData();
   }, [search, page]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-4"></div>
+        <p className="text-gray-500 text-sm font-medium">
+          Memuat data aduan...
+        </p>
+      </div>
+    );
+  }
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('id-ID', {

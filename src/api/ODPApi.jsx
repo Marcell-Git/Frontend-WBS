@@ -10,6 +10,11 @@ export const showODPApi = async (search, page) => {
     return response.data;
 };
 
+export const getAllODPApi = async () => {
+    const response = await useAxios.get('/odp/all');
+    return response.data;
+};
+
 export const createODPApi = async (data) => {
     const response = await useAxios.post('/odp', data);
     return response.data;
