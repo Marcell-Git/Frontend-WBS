@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { FaLock } from "react-icons/fa";
 
 const UpdatePasswordModal = ({ isOpen, onClose, username, onSave }) => {

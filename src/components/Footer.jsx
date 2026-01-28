@@ -5,7 +5,6 @@ const Footer = () => {
     <footer className="bg-blue-900 pt-12 pb-6">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8 mb-8">
-          {/* BAGIAN KIRI: Logo & Deskripsi */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-md">
             <img
               src={logoWBS}

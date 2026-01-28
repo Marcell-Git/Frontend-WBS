@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { FaLock, FaUser, FaBuilding, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { IoArrowBackCircle } from 'react-icons/io5';
 
 import LogoWBS from '../assets/LogoWBS.png';
 import FloatingInput from '../components/Login/FloatingInput';
+
 import { registerApi } from '../api/AuthApi';
-import { showODPApi } from '../api/ODPApi';
+import { getAllODPApi } from '../api/ODPApi';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const RegisterPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await showODPApi();
+        const result = await getAllODPApi();
         setDataODP(result);
       } catch (error) {
         console.error('Error fetching ODP data:', error);

@@ -1,9 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { FaArrowLeft, FaUser, FaBuilding, FaIdCard } from 'react-icons/fa';
-import { detailUserApi } from '../../../api/UserApi';
 
+import { FaArrowLeft, FaUser, FaBuilding, FaIdCard } from 'react-icons/fa';
+
+import { detailUserApi } from '../../../api/UserApi';
 import { updatePasswordApi } from '../../../api/UserApi';
+
 import UpdatePasswordModal from '../../Modal/UpdatePasswordModal';
 
 const RoleBadge = ({ role }) => {

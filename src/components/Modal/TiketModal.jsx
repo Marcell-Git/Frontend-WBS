@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CheckCircle, Copy, X } from 'lucide-react';
 
 const TiketModal = ({ isOpen, onClose, ticketId }) => {

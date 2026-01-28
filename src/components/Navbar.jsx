@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import { NavLink, useLocation } from 'react-router-dom';
-import { FiMenu, FiX } from 'react-icons/fi';
-import LogoWBS from '../assets/LogoWBS.png';
-import useActiveSection from '../hooks/useActiveSection';
 
+import { FiMenu, FiX } from 'react-icons/fi';
+
+import LogoWBS from '../assets/LogoWBS.png';
+
+import useActiveSection from '../hooks/useActiveSection';
 import { useAuth } from '../context/AuthContext';
 
 const sectionIds = ['beranda', 'tentang', 'prosedur', 'bantuan'];

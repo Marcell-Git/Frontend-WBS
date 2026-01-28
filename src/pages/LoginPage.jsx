@@ -1,15 +1,18 @@
-import LogoWBS from '../assets/LogoWBS.png';
-import LoginImage from '../assets/LoginImage.svg';
-import FloatingInput from '../components/Login/FloatingInput';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
+
 import { FaEye, FaEyeSlash, FaLock, FaUser } from 'react-icons/fa';
 import { IoArrowBackCircle } from 'react-icons/io5';
-import { Link } from 'react-router-dom';
 
-import { useNavigate } from 'react-router-dom';
+import LogoWBS from '../assets/LogoWBS.png';
+import LoginImage from '../assets/LoginImage.svg';
+
+import FloatingInput from '../components/Login/FloatingInput';
+
 import { useAuth } from '../context/AuthContext';
 import { loginApi } from '../api/AuthApi';
-import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -47,7 +50,11 @@ const LoginPage = () => {
         return;
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login gagal');
+      if (err.response?.status === 429) {
+        toast.warning('Terlalu banyak percobaan, coba lagi nanti');
+      } else {
+        toast.error(err.response?.data?.message || 'Login gagal');
+      }
     } finally {
       setLoading(false);
     }

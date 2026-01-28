@@ -11,11 +11,13 @@ import {
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { detailAduanApi, updateStatusAduanApi } from '../../../api/AduanApi';
+import { toast } from 'sonner';
 import DOMPurify from 'dompurify';
-import { getFileUrl } from '../../../api/useAxios';
+
 import DetailItem from '../DetailItem';
+
+import { detailAduanApi, updateStatusAduanApi } from '../../../api/AduanApi';
+import { getFileUrl } from '../../../api/useAxios';
 
 const DetailAduanPage = () => {
   const { id_aduan } = useParams();
@@ -63,6 +65,7 @@ const DetailAduanPage = () => {
 
     return `${tanggal} ${waktu}`;
   };
+
   const statusStyles = {
     'Sedang diverifikasi': {
       bg: 'bg-blue-100',

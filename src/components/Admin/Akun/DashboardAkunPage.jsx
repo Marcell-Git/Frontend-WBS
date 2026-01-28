@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import {
   FaEdit,
   FaSearch,
   FaUserCircle,
-  FaChevronLeft,
-  FaChevronRight,
 } from 'react-icons/fa';
+
 import { showUserApi } from '../../../api/UserApi';
 
 const StatusBadge = ({ status }) => {

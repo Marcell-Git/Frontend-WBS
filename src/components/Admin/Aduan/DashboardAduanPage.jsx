@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import CountUp from 'react-countup';
+
 import {
   FaCheckCircle,
   FaClipboardList,
@@ -7,14 +11,10 @@ import {
   FaTimesCircle,
 } from 'react-icons/fa';
 import { FaFileLines } from 'react-icons/fa6';
-import { useNavigate } from 'react-router-dom';
-
-import { useEffect, useState } from 'react';
-import { showAduanApi, getsummaryAduanApi } from '../../../api/AduanApi';
-
-import CountUp from 'react-countup';
 
 import StatusBadge from '../../StatusBadge';
+
+import { showAduanApi, getsummaryAduanApi } from '../../../api/AduanApi';
 
 const DashboardAduanPage = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const DashboardAduanPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await showAduanApi(search,page);
+        const result = await showAduanApi(search, page);
         const summaryResult = await getsummaryAduanApi();
         setSummary(summaryResult);
         setData(result.data);
@@ -67,8 +67,8 @@ const DashboardAduanPage = () => {
     {
       title: 'Total Aduan',
       count: total,
-      bgIcon: 'bg-fuchsia-100', 
-      textIcon: 'text-fuchsia-600', 
+      bgIcon: 'bg-fuchsia-100',
+      textIcon: 'text-fuchsia-600',
       icon: <FaClipboardList size={20} />,
     },
     {

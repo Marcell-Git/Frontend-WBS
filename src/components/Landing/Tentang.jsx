@@ -1,8 +1,9 @@
-import LandingImage2 from "../../assets/LandingImage2.svg";
 import { FaCircle, FaClock, FaFile, FaMapMarkedAlt, FaQuestionCircle, FaScroll, FaUser } from "react-icons/fa";
 import { FaLock, FaShield } from "react-icons/fa6";
 import { GoAlertFill } from "react-icons/go";
 import { LuListChecks } from "react-icons/lu";
+
+import LandingImage2 from "../../assets/LandingImage2.svg";
 
 const Tentang = () => {
   return (

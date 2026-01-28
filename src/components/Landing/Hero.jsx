@@ -1,7 +1,8 @@
-import LandingImage1 from '../../assets/LandingImage1.svg';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
+
+import LandingImage1 from '../../assets/LandingImage1.svg';
 
 const Hero = () => {
   const { token } = useAuth();
@@ -11,14 +12,14 @@ const Hero = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2, 
+        staggerChildren: 0.2,
         delayChildren: 0.1,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 }, 
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
@@ -118,7 +119,7 @@ const Hero = () => {
               repeat: Infinity,
               duration: 4,
               ease: 'easeInOut',
-              delay: 1, 
+              delay: 1,
             }}
           />
         </motion.div>

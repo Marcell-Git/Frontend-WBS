@@ -4,7 +4,7 @@ const FloatingInput = forwardRef(({
   id,
   label,
   type = 'text',
-  icon: Icon, // Kita alias-kan 'icon' menjadi 'Icon' agar bisa dirender sebagai komponen
+  icon: Icon,
   error,
   className = '',
   containerClassName = '',

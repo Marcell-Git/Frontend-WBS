@@ -1,16 +1,16 @@
 import { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+
 import { FaClipboardList, FaBars, FaSignOutAlt } from 'react-icons/fa';
+import { MdAccountCircle } from 'react-icons/md';
+import { FaBuilding } from 'react-icons/fa6';
 
 import Logo from '../assets/Logo.svg';
-import { MdAccountCircle } from 'react-icons/md';
-
-import { NavLink, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext';
-import { toast } from 'react-toastify';
 
 import LogoutModal from './Modal/LogoutModal';
-import { FaBuilding } from 'react-icons/fa6';
 
 export default function Sidebar({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +19,7 @@ export default function Sidebar({ children }) {
   const menus = [
     { name: 'Aduan', icon: <FaClipboardList />, path: '/admin/aduan' },
     { name: 'Akun', icon: <MdAccountCircle />, path: '/admin/akun' },
-    { name: 'Daftar Unit', icon : <FaBuilding />, path: '/admin/unit' },
+    { name: 'Daftar Unit', icon: <FaBuilding />, path: '/admin/unit' },
   ];
 
   const { logout } = useAuth();
@@ -34,10 +34,10 @@ export default function Sidebar({ children }) {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <LogoutModal 
-        isOpen={isLogoutModalOpen} 
-        onClose={() => setIsLogoutModalOpen(false)} 
-        onConfirm={handleLogout}      
+      <LogoutModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogout}
       />
       <div
         className={`fixed inset-0 bg-black/50 z-20 transition-opacity md:hidden ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
@@ -88,7 +88,10 @@ export default function Sidebar({ children }) {
           </nav>
 
           <div className="p-4 border-t border-gray-100">
-            <button onClick={() => setIsLogoutModalOpen(true)} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+            <button
+              onClick={() => setIsLogoutModalOpen(true)}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+            >
               <FaSignOutAlt />
               <span>Keluar</span>
             </button>
