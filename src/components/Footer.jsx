@@ -25,7 +25,7 @@ const Footer = () => {
             <div className="space-y-2 text-blue-200 text-sm">
               <p className="hover:text-white transition-colors cursor-default">
                 <span className="font-semibold text-blue-400">Hotline:</span>{' '}
-                0812-3456-7890
+                0272-321046
               </p>
               <p className="hover:text-white transition-colors cursor-default">
                 <span className="font-semibold text-blue-400">Email:</span>{' '}
