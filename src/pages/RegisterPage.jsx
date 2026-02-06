@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import ReCAPTCHA from 'react-google-recaptcha';
+
 import { FaLock, FaUser, FaBuilding, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { IoArrowBackCircle } from 'react-icons/io5';
 
@@ -18,8 +20,11 @@ const RegisterPage = () => {
     password: '',
     nama_lengkap: '',
     id_unit: '',
+    captcha: '',
   });
   const [dataODP, setDataODP] = useState([]);
+
+  const recaptchaRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -54,6 +59,11 @@ const RegisterPage = () => {
       return;
     }
 
+    if (!formData.captcha) {
+      toast.error('Captcha wajib dicentang');
+      return;
+    }
+
     setLoading(true);
     try {
       await registerApi(formData);
@@ -63,6 +73,7 @@ const RegisterPage = () => {
       toast.error(
         err.response?.data?.message || 'Registrasi gagal, silakan coba lagi.',
       );
+      recaptchaRef.current?.reset();
     } finally {
       setLoading(false);
     }
@@ -146,6 +157,14 @@ const RegisterPage = () => {
             >
               {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
             </button>
+          </div>
+
+          <div className="mt-2 flex justify-center">
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey="6LdgE10sAAAAACgXHyz-DHlOd9yhT6Pa6FZPelrk"
+              onChange={(value) => setFormData({ ...formData, captcha: value })}
+            />
           </div>
 
           <button
