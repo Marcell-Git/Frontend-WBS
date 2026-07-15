@@ -3,6 +3,17 @@ export const isEmpty = (val) =>
   val === undefined ||
   (typeof val === 'string' && val.trim() === '');
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+
+export const isFileValid = (file) =>
+  file.size <= MAX_FILE_SIZE && ALLOWED_TYPES.includes(file.type);
+
+export const isTotalFileSizeValid = (files) => {
+  const total = files.reduce((acc, f) => acc + f.size, 0);
+  return total <= MAX_FILE_SIZE;
+};
+
 export const isAduanFormValid = (data) => {
   return (
     !isEmpty(data.nama_kasus) &&
@@ -18,6 +29,8 @@ export const isAduanFormValid = (data) => {
         !isEmpty(p.id_unit)
     ) &&
     Array.isArray(data.file) &&
-    data.file.length > 0
+    data.file.length > 0 &&
+    data.file.every((f) => isFileValid(f)) &&
+    isTotalFileSizeValid(data.file)
   );
 };

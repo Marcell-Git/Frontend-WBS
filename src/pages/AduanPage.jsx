@@ -60,7 +60,18 @@ const AduanPage = () => {
   const handleCheckBeforeSubmit = (e) => {
     e.preventDefault();
     if (!isAduanFormValid(dataForm)) {
-      toast.error('Mohon lengkapi seluruh data sebelum dikirim');
+      if (!dataForm.file || dataForm.file.length === 0) {
+        toast.error('Bukti aduan wajib diunggah.');
+      } else if (dataForm.file.some((f) => f.size > 5 * 1024 * 1024)) {
+        toast.error('Ada file yang melebihi batas maksimum 5MB per file.');
+      } else {
+        const totalSize = dataForm.file.reduce((acc, f) => acc + f.size, 0);
+        if (totalSize > 5 * 1024 * 1024) {
+          toast.error(`Total ukuran file (${(totalSize / 1024 / 1024).toFixed(1)}MB) melebihi batas maksimum 5MB.`);
+        } else {
+          toast.error('Mohon lengkapi seluruh data sebelum dikirim');
+        }
+      }
       return;
     }
     setIsModalOpen(true);
@@ -95,7 +106,16 @@ const AduanPage = () => {
       }, 300);
     } catch (error) {
       console.error('Error submitting aduan:', error);
-      toast.error('Gagal mengirim aduan. Silakan coba lagi.');
+
+      if (error.response?.status === 413) {
+        toast.error('Ukuran file melebihi batas maksimum 5MB. Silakan kompres atau pilih file yang lebih kecil.');
+      } else if (error.response?.status === 422 && error.response?.data?.errors) {
+        const errors = error.response.data.errors;
+        const firstError = Object.values(errors)[0]?.[0];
+        toast.error(firstError || 'Gagal mengirim aduan. Silakan coba lagi.');
+      } else {
+        toast.error(error.response?.data?.message || 'Gagal mengirim aduan. Silakan coba lagi.');
+      }
     } finally {
       setIsSubmitting(false);
     }

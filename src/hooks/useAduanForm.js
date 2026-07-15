@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
 
 export const useAduanForm = () => {
   const [dataForm, setDataForm] = useState({
@@ -52,10 +56,36 @@ export const useAduanForm = () => {
   };
 
   const handleFileChange = (files) => {
-    setDataForm((prev) => ({
-      ...prev,
-      file: [...prev.file, ...files],
-    }));
+    const validFiles = [];
+    files.forEach((file) => {
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        toast.error(`File "${file.name}" tidak didukung. Hanya JPG, JPEG, PNG, dan PDF.`);
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(`File "${file.name}" melebihi batas maksimum 5MB.`);
+        return;
+      }
+      validFiles.push(file);
+    });
+
+    if (validFiles.length === 0) return;
+
+    setDataForm((prev) => {
+      const existingSize = prev.file.reduce((acc, f) => acc + f.size, 0);
+      const newSize = validFiles.reduce((acc, f) => acc + f.size, 0);
+      const totalSize = existingSize + newSize;
+
+      if (totalSize > MAX_FILE_SIZE) {
+        toast.error(`Total ukuran semua file (${(totalSize / 1024 / 1024).toFixed(1)}MB) melebihi batas maksimum 5MB.`);
+        return prev;
+      }
+
+      return {
+        ...prev,
+        file: [...prev.file, ...validFiles],
+      };
+    });
   };
 
   const removeFile = (index) => {
